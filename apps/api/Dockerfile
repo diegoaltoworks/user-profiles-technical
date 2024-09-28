@@ -1,6 +1,6 @@
-FROM node:18-alpine AS base
+FROM node:22-alpine AS base
 
-# The web Dockerfile is copy-pasted into our main docs at /docs/handbook/deploying-with-docker.
+# The web Dockerfile is copy-pasted into our main docs at /docs/handbook/deploying-user-profiles-technical.
 # Make sure you update this Dockerfile, the Dockerfile in the web workspace and copy that over to Dockerfile in the docs.
 
 FROM base AS builder

@@ -1,11 +1,12 @@
 {
-  "name": "with-docker",
+  "name": "user-profiles-technical",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "turbo run build",
     "clean": "turbo run clean",
     "dev": "turbo run dev",
+    "type-check": "turbo type-check",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "test": "turbo run test"

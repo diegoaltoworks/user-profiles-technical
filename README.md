@@ -7,7 +7,7 @@ This is an official Docker starter Turborepo.
 Run the following command:
 
 ```sh
-npx create-turbo@latest -e with-docker
+npx create-turbo@latest -e user-profiles-technical
 ```
 
 ## What's inside?
