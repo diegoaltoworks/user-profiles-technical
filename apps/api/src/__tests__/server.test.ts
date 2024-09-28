@@ -1,22 +1,19 @@
 import supertest from "supertest";
-import { createServer } from "../server";
+import { fastify, endServer, startServer } from "./server";
+
+beforeAll(async () => await startServer());
+afterAll(async () => await endServer());
 
 describe("server", () => {
   it("status check returns 200", async () => {
-    await supertest(createServer().server)
-      .get("/status")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.ok).toBe(true);
-      });
+    const res = await supertest(fastify.server).get("/status");
+    expect(res.status).toBe(200);
+    expect(res.body.ok).toBe(true);
   });
 
-  it("message endpoint says hello", async () => {
-    await supertest(createServer().server)
-      .get("/message/diego")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.message).toBe("hello diego");
-      });
+  it.only("message endpoint says hello", async () => {
+    const res = await supertest(fastify.server).get("/message/diego");
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBe("hello diego");
   });
 });

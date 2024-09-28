@@ -1,5 +1,5 @@
 import { createServer } from "./server";
-import { log } from "@repo/logger/src";
+import { log } from "@repo/logger";
 
 const port = Number(process.env.PORT) || 3001;
 const server = createServer();

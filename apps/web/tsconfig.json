@@ -3,7 +3,13 @@
     "compilerOptions": {
         "strict": true,
         "strictNullChecks": true,
-        "plugins": [{ "name": "next" }]
+        "plugins": [{ "name": "next" }],
+        "baseUrl": ".",
+        "paths": {
+            "@/utils/*": ["./src/utils/*"],
+            "@/hooks/*": ["./src/hooks/*"],
+            "@/components/*": ["./src/components/*"]
+        }
     },
     "include": [
         "next-env.d.ts",
