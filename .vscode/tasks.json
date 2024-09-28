@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "gcloud:build",
+      "type": "shell",
+      "command": "gcloud builds submit --tag gcr.io/dworks-diegoa/ts-node-api"
+    },
+    {
+      "label": "gcloud:deploy",
+      "type": "shell",
+      "command": "gcloud run deploy ts-node-api --image gcr.io/dworks-diegoa/ts-node-api --platform managed --region europe-west4 --allow-unauthenticated --service-account ts-node-api@dworks-diegoa.iam.gserviceaccount.com --update-secrets SENTRY_ORG=SENTRY_ORG:latest,SENTRY_PROJECT=SENTRY_PROJECT:latest,SENTRY_AUTH_TOKEN=SENTRY_AUTH_TOKEN:latest,SENTRY_DSN=SENTRY_DSN:latest,JWT_SECRET=JWT_SECRET:latest"
+    },
+    {
+      "label": "docker:build",
+      "type": "shell",
+      "command": "docker build -t ts-node-api ."
+    },
+    {
+      "label": "docker:start",
+      "type": "shell",
+      "command": "docker run -p 3000:3000 -it ts-node-api"
+    },
+    {
+      "label": "docker:clean",
+      "type": "shell",
+      "command": "docker stop $(docker ps -q) && docker image rm $(docker image ls -q) --force"
+    },
+    {
+      "label": "act:test",
+      "type": "shell",
+      "command": "act -j test -s ACT=true -b -v $(pwd):/github/workspace"
+    },
+    {
+      "label": "act:build",
+      "type": "shell",
+      "command": "rm -rf ./workspace/ && mkdir workspace && cp package*.json ./workspace && act -j build -s ACT=true -b -v $(pwd)/workspace:/github/workspace"
+    }
+  ]
+}

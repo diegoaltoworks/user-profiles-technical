@@ -1,0 +1,45 @@
+name: Build, Test, and Lint
+on:
+  push:
+    branches: [dev**]
+    paths-ignore:
+      - "**.md"
+      - .vscode/**
+  pull_request_target:
+    types:
+      - opened
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - .vscode/**
+
+jobs:
+  test:
+    timeout-minutes: 30
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install deps
+        run: npm install
+
+      - name: Run build
+        run: npm build
+
+      - name: Run lint
+        run: npm lint
+        continue-on-error: true
+
+      - name: Run unit tests
+        run: npm test

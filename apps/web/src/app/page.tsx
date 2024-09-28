@@ -6,9 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/ui/button";
 import { userSchema } from "@repo/schema";
 import { z } from "zod";
-import { trpc } from '../utils/trpc';
+import { trpc } from "../utils/trpc";
 
-type UserSchema = z.infer<typeof userSchema>
+type UserSchema = z.infer<typeof userSchema>;
 
 export default function Web() {
   const {
@@ -23,19 +23,18 @@ export default function Web() {
   const [error, setError] = useState<string | undefined>();
   const sayHello = trpc.useUtils().sayHello;
 
-
   useEffect(() => {
     setResponse(null);
     setError(undefined);
   }, []);
 
   const onSubmit = async (data: UserSchema) => {
-    if(Object.keys(errors).length > 0) return;
-    
+    if (Object.keys(errors).length > 0) return;
+
     try {
       //const result = await fetch(`${API_HOST}/message/${data.name}`);
       //const response = await result.json();
-      const response = await sayHello.fetch({name: data.name});
+      const response = await sayHello.fetch({ name: data.name });
       setResponse(response);
     } catch (err) {
       console.error(err);
@@ -52,11 +51,7 @@ export default function Web() {
       <h1>Web</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          {...register("name")}
-          id="name"
-        ></input>
+        <input type="text" {...register("name")} id="name"></input>
         {errors.name && <p>{errors.name.message}</p>}
         <Button type="submit">Submit</Button>
       </form>

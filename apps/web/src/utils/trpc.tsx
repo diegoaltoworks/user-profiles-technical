@@ -10,46 +10,44 @@ import { useState } from "react";
 //TODO: fix superjson integration
 //import superjson from "superjson";
 
-const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3001";
-
 export const trpc = createTRPCReact<AppRouter>();
 
 let clientQueryClientSingleton: QueryClient;
 function getQueryClient() {
-	if (typeof window === "undefined") {
-		// Server: always make a new query client
-		return makeQueryClient();
-	}
-	// Browser: use singleton pattern to keep the same query client
-	return (clientQueryClientSingleton ??= makeQueryClient());
+  if (typeof window === "undefined") {
+    // Server: always make a new query client
+    return makeQueryClient();
+  }
+  // Browser: use singleton pattern to keep the same query client
+  return (clientQueryClientSingleton ??= makeQueryClient());
 }
 export function TRPCProvider(
-	props: Readonly<{
-		children: React.ReactNode;
-	}>
+  props: Readonly<{
+    children: React.ReactNode;
+  }>,
 ) {
-	// NOTE: Avoid useState when initializing the query client if you don't
-	//       have a suspense boundary between this and the code that may
-	//       suspend because React will throw away the client on the initial
-	//       render if it suspends and there is no boundary
-	const queryClient = getQueryClient();
+  // NOTE: Avoid useState when initializing the query client if you don't
+  //       have a suspense boundary between this and the code that may
+  //       suspend because React will throw away the client on the initial
+  //       render if it suspends and there is no boundary
+  const queryClient = getQueryClient();
 
-	const [trpcClient] = useState(() =>
-		trpc.createClient({
-			links: [
-				httpBatchLink({
-					//transformer: superjson,
-					url: `${API_HOST}/trpc`,
-				}),
-			],
-		})
-	);
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          //transformer: superjson,
+          url: process.env.NEXT_PUBLIC_API_URL as string,
+        }),
+      ],
+    }),
+  );
 
-	return (
-		<trpc.Provider client={trpcClient} queryClient={queryClient}>
-			<QueryClientProvider client={queryClient}>
-				{props.children}
-			</QueryClientProvider>
-		</trpc.Provider>
-	);
+  return (
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        {props.children}
+      </QueryClientProvider>
+    </trpc.Provider>
+  );
 }

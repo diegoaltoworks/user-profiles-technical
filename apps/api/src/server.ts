@@ -4,7 +4,7 @@ import { trpcHandler } from "./trpc/handler";
 
 export const createServer = () => {
   const app = Fastify({
-      logger: true
+    logger: true,
   });
 
   app.register(cors);
