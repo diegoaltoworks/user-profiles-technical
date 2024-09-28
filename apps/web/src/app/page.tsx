@@ -1,28 +1,38 @@
 "use client";
 
-import { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/ui/button";
+import { userSchema } from "@repo/schema";
+import { z } from "zod";
+
+type UserSchema = z.infer<typeof userSchema>
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3001";
 
 export default function Web() {
-  const [name, setName] = useState<string>("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<UserSchema>({
+    resolver: zodResolver(userSchema),
+  });
   const [response, setResponse] = useState<{ message: string } | null>(null);
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
     setResponse(null);
     setError(undefined);
-  }, [name]);
+  }, []);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setName(e.target.value);
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: UserSchema) => {
+    if(Object.keys(errors).length > 0) return;
+    
     try {
-      const result = await fetch(`${API_HOST}/message/${name}`);
+      const result = await fetch(`${API_HOST}/message/${data.name}`);
       const response = await result.json();
       setResponse(response);
     } catch (err) {
@@ -32,21 +42,20 @@ export default function Web() {
   };
 
   const onReset = () => {
-    setName("");
+    reset();
   };
 
   return (
     <div>
       <h1>Web</h1>
-      <form onSubmit={onSubmit}>
-        <label htmlFor="name">Name </label>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label htmlFor="name">Name</label>
         <input
           type="text"
-          name="name"
+          {...register("name")}
           id="name"
-          value={name}
-          onChange={onChange}
         ></input>
+        {errors.name && <p>{errors.name.message}</p>}
         <Button type="submit">Submit</Button>
       </form>
       {error && (
