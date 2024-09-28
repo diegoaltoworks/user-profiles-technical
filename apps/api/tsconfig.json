@@ -1,12 +1,12 @@
 {
-  "extends": "@repo/typescript-config/base.json",
-  "compilerOptions": {
-    "strict": true,
-    "strictNullChecks": true,
-    "lib": ["ES2015"],
-    "outDir": "./dist",
-    "rootDir": "./src"
-  },
-  "exclude": ["node_modules","dist"],
-  "include": ["src"]
+    "extends": "@repo/typescript-config/base.json",
+    "compilerOptions": {
+        "strict": true,
+        "strictNullChecks": true,
+        "lib": ["ES2023"],
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "exclude": ["node_modules"],
+    "include": ["src"]
 }

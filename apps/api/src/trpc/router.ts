@@ -4,8 +4,8 @@ import { z, ZodError } from "zod";
 import type { Context } from "./context.ts";
 //import superjson from 'superjson';
 
-import { db } from "@repo/database";
-import { userTable } from "@repo/database";
+import { db } from "@repo/database/src";
+import { userTable } from "@repo/database/src";
 
 const t = initTRPC.context<Context>().create({
   //transformer: superjson,
@@ -32,7 +32,10 @@ export const appRouter = t.router({
     .input(userSchema)
     .output(z.object({ id: z.string() }))
     .query(async (opts) => {
-      const user = await db.insert(userTable).values(opts.input).returning({ id: userTable.id });
+      const user = await db
+        .insert(userTable)
+        .values(opts.input)
+        .returning({ id: userTable.id });
       return { id: user?.[0].id };
     }),
 });

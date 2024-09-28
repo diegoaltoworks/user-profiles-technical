@@ -1,25 +1,36 @@
 {
-  "name": "@repo/database",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "db:generate": "dotenvx run --env-file=./../../.env -- drizzle-kit generate",
-    "db:migrate": "dotenvx run --env-file=./../../.env -- drizzle-kit migrate",
-    "db:studio": "dotenvx run --env-file=./../../.env -- drizzle-kit studio",
-    "build": "tsc",
-    "clean": "rm -rf dist",
-    "dev": "tsx src/index.ts",
-    "lint": "eslint \"src/**/*.ts*\" --max-warnings 0",
-    "test": "jest"
-  },
-  "jest": {
-    "preset": "@repo/jest-presets/node"
-  },
-  "dependencies": {
-    "@libsql/client": "^0.14.0",
-    "drizzle-orm": "^0.33.0"
-  },
-  "devDependencies": {
-    "drizzle-kit": "^0.24.2"
-  }
+    "name": "@repo/database",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist/**/**",
+        "docs/**/**",
+        "!**/*.spec.*",
+        "!**/*.json",
+        "!**/*.tsbuildinfo",
+        "LICENSE",
+        "README.md"
+    ],
+    "scripts": {
+        "db:generate": "dotenvx run --env-file=./../../.env -- drizzle-kit generate",
+        "db:migrate": "dotenvx run --env-file=./../../.env -- drizzle-kit migrate",
+        "db:studio": "dotenvx run --env-file=./../../.env -- drizzle-kit studio",
+        "build": "tsc",
+        "clean": "rm -rf dist *.tsbuildinfo",
+        "dev": "tsc -w",
+        "lint": "eslint \"src/**/*.ts*\" --max-warnings 0",
+        "test": "jest"
+    },
+    "jest": {
+        "preset": "@repo/jest-presets/node"
+    },
+    "dependencies": {
+        "@libsql/client": "^0.14.0",
+        "drizzle-orm": "^0.33.0"
+    },
+    "devDependencies": {
+        "drizzle-kit": "^0.24.2"
+    }
 }

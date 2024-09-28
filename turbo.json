@@ -1,26 +1,35 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "tasks": {
-    "build": {
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "public/dist/**"],
-      "dependsOn": ["^build"],
-      "env": ["NEXT_PUBLIC_API_HOST"]
-    },
-    "type-check": {},
-    "test": {
-      "outputs": ["coverage/**"],
-      "dependsOn": []
-    },
-    "lint": {
-      "dependsOn": ["^build"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "clean": {
-      "cache": false
+    "$schema": "https://turbo.build/schema.json",
+    "globalEnv": [
+        "TURSO_DATABASE_URL",
+        "TURSO_AUTH_TOKEN",
+        "NEXT_PUBLIC_API_URL"
+    ],
+    "tasks": {
+        "build": {
+            "inputs": ["$TURBO_DEFAULT$", ".env*"],
+            "outputs": [
+                "dist/**",
+                ".next/**",
+                "!.next/cache/**",
+                "public/dist/**"
+            ],
+            "dependsOn": ["^build"]
+        },
+        "type-check": {},
+        "test": {
+            "outputs": ["coverage/**"],
+            "dependsOn": []
+        },
+        "lint": {
+            "dependsOn": ["^build"]
+        },
+        "dev": {
+            "cache": false,
+            "persistent": true
+        },
+        "clean": {
+            "cache": false
+        }
     }
-  }
 }
