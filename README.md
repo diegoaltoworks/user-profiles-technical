@@ -1,30 +1,33 @@
-# Turborepo Docker starter
+# User Profiles Technical
 
-This is an official Docker starter Turborepo.
+This is a technical task bootstraped with the [Docker starter Turborepo](https://turbo.build/repo/docs/getting-started/installation)
 
-## Using this example
+## Using this app
 
 Run the following command:
 
 ```sh
-npx create-turbo@latest -e user-profiles-technical
+npm i
+npm run dev
 ```
 
 ## What's inside?
 
-This Turborepo includes the following:
+This is the stack
 
 ### Apps and Packages
 
 -   `web`: a [Next.js](https://nextjs.org/) app
--   `api`: an [Express](https://expressjs.com/) server
--   `@repo/ui`: a React component library
+-   `api`: an [Fastify](https://fastify.dev/) server with [tRPC](https://trpc.io/)
+-   `@repo/ui`: a React component library with [shadcn/ui](https://ui.shadcn.com/)
 -   `@repo/logger`: Isomorphic logger (a small wrapper around console.log)
+-   `@repo/schema`: central [Zod](https://zod.dev/) schema (shared with other packages)
+-   `@repo/database`: [Drizzle](https://orm.drizzle.team/) schema and devops with [Turso](https://turso.tech/) SQLlite DB.
 -   `@repo/eslint-config`: ESLint presets
--   `@repo/typescript-config`: tsconfig.json's used throughout the monorepo
+-   `@repo/typescript-config`: tsconfig.json's used throughout the monorepo for consistentcy
 -   `@repo/jest-presets`: Jest configurations
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+🚀 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Docker
 
@@ -39,10 +42,10 @@ yarn install
 docker network create app_network
 
 # Build prod using new BuildKit engine
-COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml build
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker compose -f docker compose.yml build
 
 # Start prod in detached mode
-docker-compose -f docker-compose.yml up -d
+docker compose -f docker compose.yml up -d
 ```
 
 Open http://localhost:3000.
@@ -62,10 +65,11 @@ You can test this behavior using a command like:
 
 `docker build -f apps/web/Dockerfile . --build-arg TURBO_TEAM=“your-team-name” --build-arg TURBO_TOKEN=“your-token“ --no-cache`
 
-### Utilities
+### Other Utilities
 
 This Turborepo has some additional tools already setup for you:
 
+-   [DotEnvX](https://dotenvx.com/), the better dotenv
 -   [TypeScript](https://www.typescriptlang.org/) for static type checking
 -   [ESLint](https://eslint.org/) for code linting
 -   [Jest](https://jestjs.io) test runner for all things JavaScript
