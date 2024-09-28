@@ -6,10 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/ui/button";
 import { userSchema } from "@repo/schema";
 import { z } from "zod";
+import { trpc } from '../utils/trpc';
 
 type UserSchema = z.infer<typeof userSchema>
-
-const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3001";
 
 export default function Web() {
   const {
@@ -22,6 +21,8 @@ export default function Web() {
   });
   const [response, setResponse] = useState<{ message: string } | null>(null);
   const [error, setError] = useState<string | undefined>();
+  const sayHello = trpc.useUtils().sayHello;
+
 
   useEffect(() => {
     setResponse(null);
@@ -32,8 +33,9 @@ export default function Web() {
     if(Object.keys(errors).length > 0) return;
     
     try {
-      const result = await fetch(`${API_HOST}/message/${data.name}`);
-      const response = await result.json();
+      //const result = await fetch(`${API_HOST}/message/${data.name}`);
+      //const response = await result.json();
+      const response = await sayHello.fetch({name: data.name});
       setResponse(response);
     } catch (err) {
       console.error(err);
