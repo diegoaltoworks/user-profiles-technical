@@ -1,4 +1,4 @@
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import { ZodError } from "zod";
 import type { Context } from "./context";
 //import superjson from 'superjson';
@@ -19,3 +19,12 @@ const t = initTRPC.context<Context>().create({
 
 export const router = t.router;
 export const publicProcedure = t.procedure;
+export const createCallerFactory = t.createCallerFactory;
+export const privateProcedure = t.procedure.use(async ({ ctx, next }) => {
+  if (!ctx.auth) {
+    // ❌ user is not authenticated
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  // ✅ user is authenticated, carry on
+  return next();
+});

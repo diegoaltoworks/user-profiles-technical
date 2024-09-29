@@ -17,3 +17,9 @@ export const paginationSchema = z.object({
 });
 
 export type PaginationProps = z.infer<typeof paginationSchema>;
+
+export const paginationMetaSchema = z.object({
+  rowCount: z.number(),
+});
+
+export type PaginationMetaProps = z.infer<typeof paginationSchema>;
