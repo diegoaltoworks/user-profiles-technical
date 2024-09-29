@@ -1,8 +1,14 @@
+import { startServer } from "../server";
+import { FastifyInstance } from "fastify";
 import supertest from "supertest";
-import { fastify, endServer, startServer } from "./server";
 
-beforeAll(async () => await startServer());
-afterAll(async () => await endServer());
+let fastify: FastifyInstance;
+beforeAll(async () => {
+  fastify = await startServer();
+});
+afterAll(async () => {
+  fastify.close();
+});
 
 describe("server", () => {
   it("status check returns 200", async () => {
