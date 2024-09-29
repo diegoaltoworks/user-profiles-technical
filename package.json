@@ -10,10 +10,14 @@
         "type-check": "turbo type-check",
         "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
         "lint": "turbo run lint",
+        "lint-staged": "lint-staged",
         "reset": "rm -rf node_modules package-lock.json && npm install"
     },
     "devDependencies": {
         "@dotenvx/dotenvx": "^1.14.2",
+        "commitlint": "^19.5.0",
+        "husky": "^9.1.6",
+        "lint-staged": "^15.2.10",
         "prettier": "^3.2.5",
         "turbo": "^2.1.2"
     },

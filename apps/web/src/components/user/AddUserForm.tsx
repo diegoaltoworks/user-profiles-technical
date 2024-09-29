@@ -4,11 +4,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/ui/button";
-import { userSchema } from "@repo/schema";
-import { z } from "zod";
+import { userSchema, UserProps } from "@repo/schema";
 import { trpc } from "@/utils/trpc";
-
-type UserSchema = z.infer<typeof userSchema>;
 
 export default function AddUserForm() {
   const {
@@ -16,7 +13,7 @@ export default function AddUserForm() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<UserSchema>({
+  } = useForm<UserProps>({
     resolver: zodResolver(userSchema),
   });
   const [error, setError] = useState<string | undefined>();
@@ -26,7 +23,7 @@ export default function AddUserForm() {
     data: response,
   } = trpc.user.addUser.useMutation();
 
-  const onSubmit = async (data: UserSchema) => {
+  const onSubmit = async (data: UserProps) => {
     if (Object.keys(errors).length > 0) return;
 
     try {

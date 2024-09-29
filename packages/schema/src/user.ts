@@ -9,4 +9,4 @@ export const userSchema = z.object({
     .max(30, { message: "Name should be less than 30 characters" }),
 });
 
-export type UserSchema = z.infer<typeof userSchema>;
+export type UserProps = z.infer<typeof userSchema>;

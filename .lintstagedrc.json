@@ -1,0 +1,7 @@
+{
+  "*.{ts,tsx,js}": [
+    "npm run type-check",
+    "npm run format",
+    "npm run lint"
+  ]
+}
