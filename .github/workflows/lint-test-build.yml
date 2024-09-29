@@ -37,11 +37,11 @@ jobs:
         run: npm install
 
       - name: Run build
-        run: npm RUN build
+        run: npm run build
 
       - name: Run lint
-        run: npm RUN lint
+        run: npm run lint
         continue-on-error: true
 
       - name: Run unit tests
-        run: npm RUN test
+        run: npm run test
