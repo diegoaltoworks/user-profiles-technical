@@ -15,6 +15,7 @@ module.exports = {
     JSX: true,
   },
   env: {
+    jest: true,
     node: true,
   },
   plugins: ["only-warn"],
@@ -29,6 +30,7 @@ module.exports = {
     // Ignore dotfiles
     ".*.js",
     "node_modules/",
+    "build/",
   ],
   overrides: [
     { files: ["*.js?(x)", "*.ts?(x)"] },

@@ -1,4 +1,3 @@
-import { ZodError } from "zod";
 import { userSchema } from "..";
 
 describe("@repo/schema", () => {

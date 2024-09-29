@@ -17,11 +17,7 @@ export default function AddUserForm() {
     resolver: zodResolver(userSchema),
   });
   const [error, setError] = useState<string | undefined>();
-  const {
-    mutate,
-    isPending,
-    data: response,
-  } = trpc.user.addUser.useMutation();
+  const { mutate, isPending, data: response } = trpc.user.addUser.useMutation();
 
   const onSubmit = async (data: UserProps) => {
     if (Object.keys(errors).length > 0) return;

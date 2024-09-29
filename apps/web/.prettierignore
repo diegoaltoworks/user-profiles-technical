@@ -1,0 +1,5 @@
+.vscode
+.next
+build
+package-lock.json
+tsconfig.tsbuildinfo

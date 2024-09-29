@@ -17,6 +17,7 @@ module.exports = {
     JSX: true,
   },
   env: {
+    jest: true,
     browser: true,
   },
   settings: {

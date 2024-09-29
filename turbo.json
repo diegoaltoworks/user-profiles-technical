@@ -24,6 +24,9 @@
         "lint": {
             "dependsOn": ["^build"]
         },
+        "format": {
+            "cache": false
+        },
         "dev": {
             "cache": false,
             "persistent": true

@@ -11,6 +11,7 @@ module.exports = {
     JSX: true,
   },
   env: {
+    jest: true,
     node: true,
   },
   settings: {

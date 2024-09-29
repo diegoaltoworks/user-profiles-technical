@@ -8,7 +8,7 @@
         "build": "dotenvx run -- turbo run build",
         "test": "dotenvx run -- turbo run test",
         "type-check": "turbo type-check",
-        "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+        "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
         "lint": "turbo run lint",
         "lint-staged": "lint-staged",
         "reset": "rm -rf node_modules package-lock.json && npm install"

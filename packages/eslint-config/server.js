@@ -1,19 +1,35 @@
+const { resolve } = require("node:path");
+
+const project = resolve(process.cwd(), "tsconfig.json");
+
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["eslint:recommended"],
+  extends: ["eslint:recommended", "prettier", "turbo"],
+  plugins: ["only-warn"],
+  globals: {
+    React: true,
+    JSX: true,
+  },
   env: {
+    jest: true,
     node: true,
-    es6: true,
   },
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
+  settings: {
+    "import/resolver": {
+      typescript: {
+        project,
+      },
+    },
   },
+  ignorePatterns: [
+    // Ignore dotfiles
+    ".*.js",
+    "node_modules/",
+    "dist/",
+  ],
   overrides: [
     {
-      files: ["**/__tests__/**/*"],
-      env: {
-        jest: true,
-      },
+      files: ["*.js?(x)", "*.ts?(x)"],
     },
   ],
 };
