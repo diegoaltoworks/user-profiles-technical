@@ -17,7 +17,7 @@ export default function AddUserForm() {
     resolver: zodResolver(userSchema),
   });
   const [error, setError] = useState<string | undefined>();
-  const { mutate, isPending, data: response } = trpc.user.addUser.useMutation();
+  const { mutate, isPending, data: response } = trpc.user.create.useMutation();
 
   const onSubmit = async (data: UserProps) => {
     if (Object.keys(errors).length > 0) return;
@@ -34,7 +34,7 @@ export default function AddUserForm() {
     reset();
   };
   useEffect(() => {
-    if (response?.id) {
+    if (response?.[0]?.id) {
       reset();
     }
   }, [response]);

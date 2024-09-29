@@ -2,33 +2,39 @@
 
 import { trpc } from "@/utils/trpc";
 import { Button } from "@repo/ui/button";
-import { PaginationProps, paginationSchema } from "@repo/schema";
+import {
+  PaginationProps,
+  paginationSchema,
+  SearchProps,
+  searchSchema,
+} from "@repo/schema";
 import { useParsedQueryParams } from "@/hooks/useParsedQueryParams";
 
 export default function ListUsersTable() {
-  const params = useParsedQueryParams<PaginationProps>(paginationSchema);
-  const {
-    data: users,
-    isLoading,
-    error,
-  } = trpc.user.getUsers.useQuery({
-    curPage: params.curPage,
-    perPage: params.perPage,
+  const query = useParsedQueryParams<any>();
+  const pagination: PaginationProps = paginationSchema.parse(query);
+  const search: SearchProps = searchSchema.parse(query);
+  const { data, isLoading, error } = trpc.user.search.useQuery({
+    search: search.search,
+    curPage: pagination.curPage,
+    perPage: pagination.perPage,
   });
 
+  const { data: users, meta } = data || {};
+
   const updateState = (update: any) => {
-    const np = { ...params, ...update };
+    const np = { ...pagination, ...update };
     const nq = new URLSearchParams(np).toString();
     window.history.pushState(null, "", `?${nq}`);
   };
 
   const handleNextPage = () => {
-    updateState({ curPage: params.curPage + 1 });
+    updateState({ curPage: pagination.curPage + 1 });
   };
 
   const handlePreviousPage = () => {
-    if (params.curPage > 1) {
-      updateState({ curPage: params.curPage - 1 });
+    if (pagination.curPage > 1) {
+      updateState({ curPage: pagination.curPage - 1 });
     }
   };
 
@@ -54,10 +60,20 @@ export default function ListUsersTable() {
         </tbody>
       </table>
       <div>
-        <Button onClick={handlePreviousPage} disabled={params.curPage === 1}>
+        <Button
+          onClick={handlePreviousPage}
+          disabled={pagination.curPage === 1}
+        >
           Previous
         </Button>
-        <Button onClick={handleNextPage}>Next</Button>
+        <Button
+          onClick={handleNextPage}
+          disabled={
+            meta && pagination.curPage >= meta.rowCount / pagination.perPage
+          }
+        >
+          Next
+        </Button>
       </div>
     </div>
   );

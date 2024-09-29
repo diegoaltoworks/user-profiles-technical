@@ -3,7 +3,11 @@
     "compilerOptions": {
         "strict": true,
         "strictNullChecks": true,
-        "plugins": [{ "name": "next" }],
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ],
         "baseUrl": ".",
         "paths": {
             "@/utils/*": ["./src/utils/*"],
