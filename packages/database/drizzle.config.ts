@@ -1,3 +1,10 @@
+import { cleanEnv, str } from "envalid";
+
+const env = cleanEnv(process.env, {
+  TURSO_DATABASE_URL: str(),
+  TURSO_AUTH_TOKEN: str(),
+});
+
 import type { Config } from "drizzle-kit";
 
 export default {
@@ -6,7 +13,7 @@ export default {
   dialect: "sqlite",
   driver: "turso",
   dbCredentials: {
-    url: process.env.TURSO_DATABASE_URL!,
-    authToken: process.env.TURSO_AUTH_TOKEN,
+    url: env.TURSO_DATABASE_URL!,
+    authToken: env.TURSO_AUTH_TOKEN,
   },
 } satisfies Config;
