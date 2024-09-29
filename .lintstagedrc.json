@@ -1,7 +1,4 @@
 {
-    "*.{ts,tsx,js,json}": [
-        "npm run type-check",
-        "npm run format",
-        "npm run lint"
-    ]
+    "*.{js,ts,tsx}": ["npm run format -- "],
+    "*.json": ["npm run format --"]
 }

@@ -1,6 +1,6 @@
 # Still to-do
 
--   🕔 add husky and pre-commit tasks
+-   ✅ add husky and pre-commit tasks
 -   🕔 add test stubs
 -   🕔 refactor api interface (crud)
 -   🕔 add test-ids to ui
