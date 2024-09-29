@@ -3,8 +3,8 @@ import {
   FastifyTRPCPluginOptions,
 } from "@trpc/server/adapters/fastify";
 import { FastifyInstance, FastifyPluginCallback } from "fastify";
-import { createContext } from "./context";
-import { appRouter, AppRouter } from "./router";
+import { createContext } from "../trpc/context";
+import { appRouter, AppRouter } from "../trpc/router";
 
 // tRPC handler plugin for Fastify
 export const trpcHandler: FastifyPluginCallback = (
@@ -13,7 +13,6 @@ export const trpcHandler: FastifyPluginCallback = (
   done,
 ) => {
   server.register(fastifyTRPCPlugin, {
-    prefix: "/trpc",
     trpcOptions: {
       router: appRouter,
       createContext,

@@ -1,72 +1,53 @@
 import { z } from "zod";
 import { db } from "@repo/database";
 import { userTable } from "@repo/database";
-import {
-  idPropArraySchema,
-  idSchema,
-  newUsersSchema,
-  paginationMetaSchema,
-  paginationSchema,
-  searchSchema,
-  userSchema,
-} from "@repo/schema";
 import { router, publicProcedure } from "../app";
 import { desc, inArray, or, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { safeLike, totalCount } from "@repo/database";
-
+import * as schema from "@repo/schema";
 export const userRouter = router({
   create: publicProcedure
-    .input(newUsersSchema)
-    .output(idPropArraySchema)
+    .meta({
+      openapi: { method: "GET", path: "/user/create" },
+    })
+    .input(schema.userSchema.omit({ id: true }))
+    .output(schema.idSchema.array())
     .mutation(async (opts) => {
+      const input = opts.input;
       const data = await db
         .insert(userTable)
         .values(opts.input)
         .returning({ id: userTable.id });
-
-      if (data.length !== opts.input.length) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create all requested users",
-        });
-      }
-
       return data;
     }),
 
   retrieve: publicProcedure
+    .meta({
+      openapi: { method: "GET", path: "/user/retrieve" },
+    })
     .input(
       z.object({
-        ids: idSchema,
-        meta: z.intersection(paginationSchema, searchSchema),
+        ...schema.idSchema.shape,
+        ...schema.searchSchema.shape,
       }),
     )
     .output(
       z.object({
-        data: z.array(userSchema),
-        meta: paginationMetaSchema,
+        data: schema.userSchema.array(),
+        meta: schema.metaSchema,
       }),
     )
     .query(async (opts) => {
-      const { ids, meta } = opts.input;
-
-      if (!ids.length)
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Unspecified record IDs",
-        });
-
-      const criteria = inArray(userTable.id, ids);
+      const criteria = inArray(userTable.id, [opts.input.id]);
 
       const data = await db
         .select()
         .from(userTable)
         .where(criteria)
         .orderBy(desc(userTable.createdAt))
-        // todo: refactor pagination to offset/limit
-        .offset((meta.curPage - 1) * meta.perPage + 1)
-        .limit(meta.perPage);
+        .offset(opts.input.offset)
+        .limit(opts.input.limit);
       const rowCount = await totalCount(userTable, criteria, data.length);
 
       return {
@@ -78,34 +59,33 @@ export const userRouter = router({
     }),
 
   search: publicProcedure
-    .input(z.intersection(paginationSchema, searchSchema).optional())
+    .meta({
+      openapi: { method: "GET", path: "/user/search" },
+    })
+    .input(schema.searchSchema)
     .output(
       z.object({
-        data: z.array(userSchema),
-        meta: paginationMetaSchema,
+        data: schema.userSchema.array(),
+        meta: schema.metaSchema,
       }),
     )
     .query(async (opts) => {
-      const meta = opts.input;
-
-      const criteria = meta
-        ? or(
-            meta.search ? safeLike(userTable.name, meta.search) : sql`true`,
-            // todo: add email, address, other columns
-          )
-        : undefined;
-
+      const criteria = or(
+        ...[
+          opts.input.keyword
+            ? safeLike(userTable.name, opts.input.keyword)
+            : sql`true`,
+          // todo: add email, address, other columns
+        ],
+      );
       const query = db
         .select()
         .from(userTable)
         .where(criteria)
-        .orderBy(desc(userTable.createdAt));
-      // todo: refactor pagination to offset/limit
-      meta && query.offset((meta.curPage - 1) * meta.perPage + 1);
-      meta && query.limit(meta.perPage);
-
+        .orderBy(desc(userTable.createdAt))
+        .offset(opts.input.offset)
+        .limit(opts.input.limit);
       const data = await query;
-
       const rowCount = await totalCount(userTable, criteria, data.length);
 
       return {
@@ -117,41 +97,42 @@ export const userRouter = router({
     }),
 
   update: publicProcedure
-    .input(
-      z.object({
-        ids: idSchema,
-        data: userSchema.partial().omit({ id: true }),
-      }),
-    )
-    .output(z.array(userSchema))
+
+    .meta({
+      openapi: { method: "GET", path: "/user/update" },
+    })
+    .input(schema.userSchema)
+    .output(schema.userSchema.array())
     .mutation(async (opts) => {
-      const { ids, data } = opts.input;
-
-      const updatedUsers = await db
-        .update(userTable)
-        .set(data)
-        .where(inArray(userTable.id, ids))
-        .returning();
-
-      if (updatedUsers.length !== ids.length) {
+      if (!schema.idSchema.safeParse({ id: opts.input.id }).success) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Some users to update were not found",
+          code: "BAD_REQUEST",
+          message: "Invalid input: id is required",
         });
       }
+      const criteria = inArray(userTable.id, [opts.input.id as string]);
+      const updatedUsers = await db
+        .update(userTable)
+        .set(opts.input)
+        .where(criteria)
+        .returning();
 
       return updatedUsers;
     }),
 
   delete: publicProcedure
-    .input(z.object({ ids: idSchema }))
-    .output(z.array(z.object({ id: z.string() })))
-    .mutation(async (opts) => {
-      const { ids } = opts.input;
 
+    .meta({
+      openapi: { method: "GET", path: "/user/delete" },
+    })
+    .input(schema.idSchema)
+    .output(schema.idSchema.array())
+    .mutation(async (opts) => {
+      const ids = [opts.input.id];
+      const criteria = inArray(userTable.id, ids);
       const deletedUsers = await db
         .delete(userTable)
-        .where(inArray(userTable.id, ids))
+        .where(criteria)
         .returning({ id: userTable.id });
 
       if (deletedUsers.length !== ids.length) {

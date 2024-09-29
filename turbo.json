@@ -1,9 +1,12 @@
 {
     "$schema": "https://turbo.build/schema.json",
     "globalEnv": [
+        "PROJECT_NAME",
+        "PROJECT_VERSION",
         "TURSO_DATABASE_URL",
         "TURSO_AUTH_TOKEN",
-        "NEXT_PUBLIC_API_URL"
+        "NEXT_PUBLIC_WEB_HOST",
+        "NEXT_PUBLIC_API_HOST"
     ],
     "tasks": {
         "build": {

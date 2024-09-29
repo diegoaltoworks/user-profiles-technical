@@ -37,7 +37,7 @@ export function TRPCProvider(
       links: [
         httpBatchLink({
           //transformer: superjson,
-          url: process.env.NEXT_PUBLIC_API_URL as string,
+          url: `${process.env.NEXT_PUBLIC_API_HOST as string}/trpc`,
         }),
       ],
     }),

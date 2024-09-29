@@ -2,39 +2,32 @@
 
 import { trpc } from "@/utils/trpc";
 import { Button } from "@repo/ui/button";
-import {
-  PaginationProps,
-  paginationSchema,
-  SearchProps,
-  searchSchema,
-} from "@repo/schema";
+import { SearchProps, searchSchema, UserProps } from "@repo/schema";
 import { useParsedQueryParams } from "@/hooks/useParsedQueryParams";
 
 export default function ListUsersTable() {
-  const query = useParsedQueryParams<any>();
-  const pagination: PaginationProps = paginationSchema.parse(query);
-  const search: SearchProps = searchSchema.parse(query);
+  const search = useParsedQueryParams<SearchProps>(searchSchema);
   const { data, isLoading, error } = trpc.user.search.useQuery({
-    search: search.search,
-    curPage: pagination.curPage,
-    perPage: pagination.perPage,
+    keyword: search.keyword,
+    offset: search.offset,
+    limit: search.limit,
   });
 
   const { data: users, meta } = data || {};
 
   const updateState = (update: any) => {
-    const np = { ...pagination, ...update };
+    const np = { ...search, ...update };
     const nq = new URLSearchParams(np).toString();
     window.history.pushState(null, "", `?${nq}`);
   };
 
   const handleNextPage = () => {
-    updateState({ curPage: pagination.curPage + 1 });
+    updateState({ offset: search.offset + 1 });
   };
 
   const handlePreviousPage = () => {
-    if (pagination.curPage > 1) {
-      updateState({ curPage: pagination.curPage - 1 });
+    if (search.offset > 1) {
+      updateState({ offset: search.offset - 1 });
     }
   };
 
@@ -52,7 +45,7 @@ export default function ListUsersTable() {
           </tr>
         </thead>
         <tbody>
-          {users?.map((user) => (
+          {users?.map((user: UserProps) => (
             <tr key={user.id}>
               <td>{user.name}</td>
             </tr>
@@ -60,17 +53,12 @@ export default function ListUsersTable() {
         </tbody>
       </table>
       <div>
-        <Button
-          onClick={handlePreviousPage}
-          disabled={pagination.curPage === 1}
-        >
+        <Button onClick={handlePreviousPage} disabled={search.offset === 1}>
           Previous
         </Button>
         <Button
           onClick={handleNextPage}
-          disabled={
-            meta && pagination.curPage >= meta.rowCount / pagination.perPage
-          }
+          disabled={meta && search.offset >= meta.rowCount / search.limit}
         >
           Next
         </Button>
