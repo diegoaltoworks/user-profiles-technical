@@ -1,5 +1,7 @@
 import { cleanEnv, str } from "envalid";
 import Link from "next/link";
+import IssuesPage from "./issues";
+import TodoPage from "./todo";
 
 const env = cleanEnv(process.env, {
   PROJECT_NAME: str(),
@@ -17,20 +19,31 @@ export default function PrivacyPage() {
       <div>
         <ul>
           <li>
+            <Link href={`${env.NEXT_PUBLIC_API_HOST}/panel/`}>tRPC Panel</Link>
+          </li>
+          <li>
             <Link href={`${env.NEXT_PUBLIC_API_HOST}/openapi.json`}>
-              openapi.json
+              RESTful openapi.json
             </Link>
+            <span className="text-yellow-600 bg-yellow-100 px-2 py-1 rounded">
+              draft!
+            </span>
           </li>
           <li>
             <Link href={`${env.NEXT_PUBLIC_API_HOST}/docs/`}>
-              tRPC API Docs
+              RESTful API Docs
             </Link>
-          </li>
-          <li>
-            <Link href={`${env.NEXT_PUBLIC_API_HOST}/panel/`}>tRPC Panel</Link>
+            <span className="text-yellow-600 bg-yellow-100 px-2 py-1 rounded">
+              draft!
+            </span>
+            <span className="text-yellow-600 bg-yellow-100 px-2 py-1 rounded">
+              and not implemented
+            </span>
           </li>
         </ul>
       </div>
+      <IssuesPage />
+      <TodoPage />
     </main>
   );
 }
