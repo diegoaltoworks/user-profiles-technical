@@ -78,13 +78,22 @@ export default function EditUserForm() {
             <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>
           )}
         </div>
-        <Button
-          type="submit"
-          className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-          disabled={isLoading}
-        >
-          Submit
-        </Button>
+        <div className="flex gap-10 flex-row">
+          <Button
+            type="button"
+            onClick={() => router.back()}
+            className="w-1/2 py-2 px-4 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+            disabled={isLoading}
+          >
+            Save Changes
+          </Button>
+        </div>
       </form>
       {error && (
         <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-md">

@@ -50,7 +50,7 @@ export default function ListUsersTable() {
           const limit = parseInt(formData.get("limit") as string, 10);
           updateState({ keyword, limit, page: 1 });
         }}
-        className="flex justify-between mb-4 relative"
+        className="flex justify-start mb-4 relative"
       >
         <div className="inline-block relative w-64">
           <input
@@ -70,10 +70,18 @@ export default function ListUsersTable() {
             </button>
           )}
         </div>
+
+        <Button
+          type="submit"
+          className="bg-blue-500 text-white py-2 px-4 rounded ml-2"
+        >
+          Search
+        </Button>
+
         <select
           name="limit"
           defaultValue={search.limit}
-          className="border border-gray-300 rounded py-2 px-4"
+          className="border border-gray-300 rounded py-2 px-4 ml-2"
           onChange={(e) => {
             e.target.form?.submit();
           }}
@@ -82,12 +90,6 @@ export default function ListUsersTable() {
           <option value={20}>20</option>
           <option value={50}>50</option>
         </select>
-        <Button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded ml-2"
-        >
-          Search
-        </Button>
       </form>
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
