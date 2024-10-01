@@ -19,6 +19,10 @@ This will build and run both apps in parallel.
     -   REST api [/docs/](http://localhost:3001/docs/)
     -   REST api [/openapi.json](http://localhost:3001/openapi.json)
 
+## Preview
+
+![Preview](https://i.imgur.com/8HdrVv8.gif)
+
 ## What's inside?
 
 This is the stack
