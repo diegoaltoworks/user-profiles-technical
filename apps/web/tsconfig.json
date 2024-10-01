@@ -10,9 +10,10 @@
         ],
         "baseUrl": ".",
         "paths": {
-            "@/utils/*": ["./src/utils/*"],
-            "@/hooks/*": ["./src/hooks/*"],
-            "@/components/*": ["./src/components/*"]
+            "~/*": ["./src/*"],
+            "~/utils/*": ["./src/utils/*"],
+            "~/hooks/*": ["./src/hooks/*"],
+            "~/components/*": ["./src/components/*"]
         }
     },
     "include": [

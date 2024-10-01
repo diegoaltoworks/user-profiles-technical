@@ -19,7 +19,7 @@ This is the stack
 
 -   `web`: a [Next.js](https://nextjs.org/) app
 -   `api`: an [Fastify](https://fastify.dev/) server with [tRPC](https://trpc.io/)
--   `@repo/ui`: a React component library with [shadcn/ui](https://ui.shadcn.com/)
+-   `@repo/ui`: a React component library ~~with [shadcn/ui](https://ui.shadcn.com/)~~
 -   `@repo/logger`: Isomorphic logger (a small wrapper around console.log)
 -   `@repo/schema`: central [Zod](https://zod.dev/) schema (shared with other packages)
 -   `@repo/database`: [Drizzle](https://orm.drizzle.team/) schema and devops with [Turso](https://turso.tech/) SQLlite DB.

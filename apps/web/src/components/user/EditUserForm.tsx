@@ -6,9 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@repo/ui/button";
 import { userSchema, UserProps } from "@repo/schema";
 import { trpc } from "~/utils/trpc";
+import { useUser } from "~/hooks/useUser";
 import { useRouter } from "next/navigation";
 
-export default function AddUserForm() {
+export default function EditUserForm() {
+  const user = useUser();
   const utils = trpc.useUtils();
   const router = useRouter();
   const {
@@ -18,19 +20,25 @@ export default function AddUserForm() {
     reset,
   } = useForm<UserProps>({
     resolver: zodResolver(userSchema),
+    defaultValues: user || undefined,
   });
   const [error, setError] = useState<string | undefined>();
   const {
     mutate,
     isLoading,
     data: response,
-  } = trpc.user.create.useMutation({
+  } = trpc.user.update.useMutation({
     onSuccess() {
       utils.user.retrieve.invalidate();
       utils.user.search.invalidate();
       router.back();
     },
   });
+
+  useEffect(() => {
+    if (!user) return;
+    reset(user);
+  }, [user]);
 
   const onSubmit = async (data: UserProps) => {
     if (Object.keys(errors).length > 0) return;
@@ -54,7 +62,7 @@ export default function AddUserForm() {
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-md">
-      <h1 className="text-2xl font-bold mb-4">Add User</h1>
+      <h1 className="text-2xl font-bold mb-4">Edit User</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label
