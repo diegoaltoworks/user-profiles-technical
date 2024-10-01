@@ -8,9 +8,9 @@ First and foremost, thank you for using [Project Name].
 
 Before seeking support, please make sure to:
 
-- Read the [README](https://github.com/diegoaltoworks/user-profiles-technical/blob/main/README.md) file.
-- Check the [Wiki](https://github.com/diegoaltoworks/user-profiles-technical/wiki) for additional information.
-- Review the [Issues](https://github.com/diegoaltoworks/user-profiles-technical/issues) to see if your question has already been answered.
+-   Read the [README](https://github.com/diegoaltoworks/user-profiles-technical/blob/main/README.md) file.
+-   Check the [Wiki](https://github.com/diegoaltoworks/user-profiles-technical/wiki) for additional information.
+-   Review the [Issues](https://github.com/diegoaltoworks/user-profiles-technical/issues) to see if your question has already been answered.
 
 ### 🐛 Open an Issue
 
@@ -24,7 +24,7 @@ For more direct support, you can reach out to us via email at [support@diegoalto
 
 You can also get help from the community:
 
-- Join our [Slack Channel](https://diegoaltoworks.slack.com/archives/C07KUMWP2DB).
-- Post your question on [Stack Overflow](https://stackoverflow.com/) with the tag `user-profiles-technical`.
+-   Join our [Slack Channel](https://diegoaltoworks.slack.com/archives/C07KUMWP2DB).
+-   Post your question on [Stack Overflow](https://stackoverflow.com/) with the tag `user-profiles-technical`.
 
 We appreciate your feedback and contributions to improve [Project Name]!
