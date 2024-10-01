@@ -9,7 +9,7 @@ import * as schema from "@repo/schema";
 export const userRouter = router({
   create: publicProcedure
     .meta({
-      openapi: { method: "GET", path: "/user/create" },
+      openapi: { method: "POST", path: "/user" },
     })
     .input(schema.userSchema)
     .output(schema.idSchema.array())
@@ -24,14 +24,9 @@ export const userRouter = router({
 
   retrieve: publicProcedure
     .meta({
-      openapi: { method: "GET", path: "/user/retrieve" },
+      openapi: { method: "GET", path: "/user" },
     })
-    .input(
-      z.object({
-        ...schema.idSchema.shape,
-        ...schema.searchInput.shape,
-      }),
-    )
+    .input(schema.idSchema)
     .output(
       z.object({
         data: schema.existingUserSchema.array(),
@@ -99,9 +94,8 @@ export const userRouter = router({
     }),
 
   update: publicProcedure
-
     .meta({
-      openapi: { method: "GET", path: "/user/update" },
+      openapi: { method: "PUT", path: "/user" },
     })
     .input(schema.userSchema)
     .output(schema.userSchema.array())
@@ -123,9 +117,8 @@ export const userRouter = router({
     }),
 
   delete: publicProcedure
-
     .meta({
-      openapi: { method: "GET", path: "/user/delete" },
+      openapi: { method: "DELETE", path: "/user" },
     })
     .input(schema.idSchema)
     .output(schema.idSchema.array())
