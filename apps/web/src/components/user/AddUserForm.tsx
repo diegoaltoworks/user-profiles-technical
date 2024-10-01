@@ -7,6 +7,7 @@ import { Button } from "@repo/ui/button";
 import { userSchema, UserProps } from "@repo/schema";
 import { trpc } from "~/utils/trpc";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AddUserForm() {
   const utils = trpc.useUtils();
@@ -28,7 +29,6 @@ export default function AddUserForm() {
     onSuccess() {
       utils.user.retrieve.invalidate();
       utils.user.search.invalidate();
-      router.back();
     },
   });
 
@@ -87,14 +87,15 @@ export default function AddUserForm() {
         </div>
       )}
       {response && (
-        <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
-          <p>User added!</p>
+        <div data-setid="user-added">
+          <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
+            <p>User added!</p>
+          </div>
           <Button
-            onClick={onReset}
-            disabled={isLoading}
+            onClick={() => router.push("/users")}
             className="mt-2 w-full py-2 px-4 bg-gray-600 text-white rounded-md hover:bg-gray-700"
           >
-            Reset
+            Back to List
           </Button>
         </div>
       )}
