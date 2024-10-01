@@ -11,7 +11,7 @@ export const userRouter = router({
     .meta({
       openapi: { method: "GET", path: "/user/create" },
     })
-    .input(schema.userSchema.omit({ id: true }))
+    .input(schema.userSchema)
     .output(schema.idSchema.array())
     .mutation(async (opts) => {
       const input = opts.input;
@@ -29,16 +29,17 @@ export const userRouter = router({
     .input(
       z.object({
         ...schema.idSchema.shape,
-        ...schema.searchSchema.shape,
+        ...schema.searchInput.shape,
       }),
     )
     .output(
       z.object({
-        data: schema.userSchema.array(),
+        data: schema.existingUserSchema.array(),
         meta: schema.metaSchema,
       }),
     )
     .query(async (opts) => {
+      const search = schema.searchProps.parse(opts.input);
       const criteria = inArray(userTable.id, [opts.input.id]);
 
       const data = await db
@@ -46,8 +47,8 @@ export const userRouter = router({
         .from(userTable)
         .where(criteria)
         .orderBy(desc(userTable.createdAt))
-        .offset(opts.input.offset)
-        .limit(opts.input.limit);
+        .offset(search.offset)
+        .limit(search.limit);
       const rowCount = await totalCount(userTable, criteria, data.length);
 
       return {
@@ -62,7 +63,7 @@ export const userRouter = router({
     .meta({
       openapi: { method: "GET", path: "/user/search" },
     })
-    .input(schema.searchSchema)
+    .input(schema.searchInput)
     .output(
       z.object({
         data: schema.userSchema.array(),
@@ -70,6 +71,7 @@ export const userRouter = router({
       }),
     )
     .query(async (opts) => {
+      const search = schema.searchProps.parse(opts.input);
       const criteria = or(
         ...[
           opts.input.keyword
@@ -83,8 +85,8 @@ export const userRouter = router({
         .from(userTable)
         .where(criteria)
         .orderBy(desc(userTable.createdAt))
-        .offset(opts.input.offset)
-        .limit(opts.input.limit);
+        .offset(search.offset)
+        .limit(search.limit);
       const data = await query;
       const rowCount = await totalCount(userTable, criteria, data.length);
 

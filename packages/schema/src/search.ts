@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const searchSchema = z.object({
+export const searchInput = z.object({
   keyword: z.string().optional(),
 
   // todo: add other common search props
   //  date: z.date().optional(),
   //  active: z.boolean().optional(),
 
-  offset: z.coerce.number().min(0).transform(Math.floor).optional().default(0),
+  page: z.coerce.number().min(0).transform(Math.floor).optional().default(1),
 
   limit: z.coerce
     .number()
@@ -18,4 +18,15 @@ export const searchSchema = z.object({
     .default(10),
 });
 
-export type SearchProps = z.infer<typeof searchSchema>;
+export type SearchInput = z.infer<typeof searchInput>;
+
+export const searchProps = searchInput
+  .extend({
+    offset: z.number().optional().default(0),
+  })
+  .transform((data) => {
+    data.offset = (data.page - 1) * data.limit;
+    return data;
+  });
+
+export type SearchProps = z.infer<typeof searchProps>;

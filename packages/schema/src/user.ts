@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { idSchema } from "./id";
 
 export const userSchema = z.object({
   id: z.string().uuid().optional(),
@@ -10,3 +11,7 @@ export const userSchema = z.object({
 });
 
 export type UserProps = z.infer<typeof userSchema>;
+
+export const existingUserSchema = userSchema.extend(idSchema.shape);
+
+export type ExistingUserProps = z.infer<typeof existingUserSchema>;
