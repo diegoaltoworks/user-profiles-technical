@@ -51,9 +51,6 @@ export default function EditUserForm() {
     }
   };
 
-  const onReset = () => {
-    reset();
-  };
   useEffect(() => {
     if (response?.[0]?.id) {
       reset();
@@ -84,6 +81,7 @@ export default function EditUserForm() {
         <Button
           type="submit"
           className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          disabled={isLoading}
         >
           Submit
         </Button>
@@ -96,14 +94,7 @@ export default function EditUserForm() {
       )}
       {response && (
         <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
-          <p>User added!</p>
-          <Button
-            onClick={onReset}
-            disabled={isLoading}
-            className="mt-2 w-full py-2 px-4 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-          >
-            Reset
-          </Button>
+          <p>User Updated!</p>
         </div>
       )}
     </div>

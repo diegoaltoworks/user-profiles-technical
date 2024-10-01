@@ -7,7 +7,6 @@ import { Button } from "@repo/ui/button";
 import { userSchema, UserProps } from "@repo/schema";
 import { trpc } from "~/utils/trpc";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 export default function AddUserForm() {
   const utils = trpc.useUtils();
@@ -43,9 +42,6 @@ export default function AddUserForm() {
     }
   };
 
-  const onReset = () => {
-    reset();
-  };
   useEffect(() => {
     if (response?.[0]?.id) {
       reset();
@@ -76,6 +72,7 @@ export default function AddUserForm() {
         <Button
           type="submit"
           className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          disabled={isLoading}
         >
           Submit
         </Button>
