@@ -11,6 +11,20 @@ export default function Page(): React.ReactNode {
             <Link href="https://diegoalto.works/">DWorks</Link>
           </p>
         </div>
+        <div className="flex space-x-4">
+          <a href="/privacy" className="text-gray-400 hover:text-white">
+            Privacy
+          </a>
+          <a href="/license" className="text-gray-400 hover:text-white">
+            License
+          </a>
+          <a href="/docs" className="text-gray-400 hover:text-white">
+            Docs
+          </a>
+          <a href="/contact" className="text-gray-400 hover:text-white">
+            Contact
+          </a>
+        </div>
       </div>
     </footer>
   );
