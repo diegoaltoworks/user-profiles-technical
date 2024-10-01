@@ -2,13 +2,11 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { ZodError } from "zod";
 import { OpenApiMeta } from "trpc-openapi";
 import type { Context } from "./context";
-//import superjson from 'superjson';
 
 const t = initTRPC
   .meta<OpenApiMeta>()
   .context<Context>()
   .create({
-    //transformer: superjson,
     errorFormatter({ shape, error }) {
       return {
         ...shape,
