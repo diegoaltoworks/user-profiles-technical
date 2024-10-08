@@ -12,6 +12,11 @@
         "lint-staged": "lint-staged",
         "reset": "rm -rf node_modules package-lock.json && npm install",
         "clean": "turbo run clean",
+        "gcloud:setup": "gcloud config configurations activate diagoa",
+        "gcloud:build:api": "gcloud builds submit --tag gcr.io/dworks-diegoa/user-profiles-technical-api",
+        "gcloud:deploy:api": "gcloud run deploy user-profiles-technical-api --image gcr.io/dworks-diegoa/user-profiles-technical-api --platform managed --region europe-west4 --allow-unauthenticated",
+        "gcloud:build:web": "gcloud builds submit --tag gcr.io/dworks-diegoa/user-profiles-technical-web",
+        "gcloud:deploy:web": "gcloud run deploy user-profiles-technical-web --image gcr.io/dworks-diegoa/user-profiles-technical-web --platform managed --region europe-west4 --allow-unauthenticated",
         "prepare": "husky"
     },
     "devDependencies": {
@@ -31,5 +36,13 @@
     "workspaces": [
         "apps/*",
         "packages/*"
-    ]
+    ],
+    "dependencies": {
+        "@tanstack/react-query": "^4.36.1",
+        "@trpc/client": "^10.45.2",
+        "@trpc/next": "^10.45.2",
+        "@trpc/react-query": "^10.45.2",
+        "@trpc/server": "^10.45.2",
+        "zod": "^3.23.8"
+    }
 }

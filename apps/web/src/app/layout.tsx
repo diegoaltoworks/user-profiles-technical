@@ -1,6 +1,5 @@
+import { TRPCQueryClient } from "~/utils/query-client";
 import "./global.css";
-
-import { TRPCProvider } from "~/utils/trpc";
 
 export default function RootLayout({
   children,
@@ -14,7 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TRPCProvider>
+        <TRPCQueryClient>
           <div className="flex min-h-screen">
             <div className="flex flex-col flex-grow">
               <header className="bg-gray-800 text-white p-4">{header}</header>
@@ -22,7 +21,7 @@ export default function RootLayout({
               <footer className="bg-gray-800 text-white p-4">{footer}</footer>
             </div>
           </div>
-        </TRPCProvider>
+        </TRPCQueryClient>
       </body>
     </html>
   );
