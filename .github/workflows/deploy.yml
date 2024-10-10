@@ -43,7 +43,7 @@ jobs:
 
     - name: 'Use gcloud CLI'
       run: |
-        gcloud auth list --filter=status:ACTIVE --format="value(account)"'
+        gcloud auth list --filter=status:ACTIVE --format="value(account)"
 
     - name: Checkout repo
       uses: actions/checkout@v4
