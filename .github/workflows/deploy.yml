@@ -27,7 +27,7 @@ jobs:
       shell: bash
 
     - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v0.7.0
       with:
         project_id: ${{ env.GCP_PROJECT_ID }}
         service_account_key: ${{ env.GCP_SA_KEY }}
@@ -36,18 +36,6 @@ jobs:
     - name: 'Use gcloud CLI'
       run: |
         gcloud auth list --filter=status:ACTIVE --format="value(account)"
-
-    - name: Checkout repo
-      uses: actions/checkout@v4
-      if: ${{ !env.ACT }}
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-        fetch-depth: 1
-
-    - name: Setup node
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22.x'
 
     - name: Deploy API image to Cloud Run
       run: |
