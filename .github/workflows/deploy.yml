@@ -1,0 +1,83 @@
+name: deploy
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check required environment variables
+      run: |
+        required_vars=()
+        for var in GCP_PROJECT_ID GCP_SA_KEY; do
+          if [ -z "${!var}" ]; then
+            required_vars+=($var)
+          fi
+        done
+        if [ ${#required_vars[@]} -ne 0 ]; then
+          echo "Error: The following required environment variables are not set: ${required_vars[*]}"
+          exit 1
+        fi
+      shell: bash
+
+    - name: Set up Cloud Auth
+      id: 'auth'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: ${{ env.GCP_PROJECT_ID }}
+        credentials_json: ${{ env.GCP_SA_KEY }}
+        export_environment_variables: true
+        create_credentials_file: true
+        # see https://github.com/google-github-actions/auth
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        version: '>= 363.0.0'
+
+    - name: 'Use gcloud CLI'
+      run: |
+        gcloud auth list --filter=status:ACTIVE --format="value(account)"'
+
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      if: ${{ !env.ACT }}
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        fetch-depth: 1
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+
+    - name: Deploy API image to Cloud Run
+      run: |
+        gcloud run deploy user-profiles-technical-api \
+        --image gcr.io/${{ env.GCP_PROJECT_ID }}/api:${{ github.sha }} \
+        --platform managed \
+        --region europe-west4 \
+        --set-secrets "PROJECT_NAME=PROJECT_NAME:latest" \
+        --set-secrets "PROJECT_VERSION=PROJECT_VERSION:latest" \
+        --set-secrets "TURSO_DATABASE_URL=TURSO_DATABASE_URL:latest" \
+        --set-secrets "TURSO_AUTH_TOKEN=TURSO_AUTH_TOKEN:latest" \
+        --allow-unauthenticated
+
+    - name: Deploy WEB image to Cloud Run
+      run: |
+        gcloud run deploy user-profiles-technical-web \
+        --image gcr.io/${{ env.GCP_PROJECT_ID }}/web:${{ github.sha }} \
+        --platform managed \
+        --region europe-west4 \
+        --set-secrets "PROJECT_NAME=PROJECT_NAME:latest" \
+        --set-secrets "PROJECT_VERSION=PROJECT_VERSION:latest" \
+        --set-secrets "NEXT_PUBLIC_API_HOST=NEXT_PUBLIC_API_HOST:latest" \
+        --set-secrets "NEXT_PUBLIC_WEB_HOST=NEXT_PUBLIC_WEB_HOST:latest" \
+        --set-secrets "NEXT_PUBLIC_GITHUB_USERNAME=NEXT_PUBLIC_GITHUB_USERNAME:latest" \
+        --allow-unauthenticated

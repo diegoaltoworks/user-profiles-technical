@@ -4,12 +4,12 @@
         {
             "label": "gcloud:build",
             "type": "shell",
-            "command": "gcloud builds submit --tag gcr.io/dworks-diegoa/ts-node-api"
+            "command": "gcloud builds submit --tag gcr.io/dworks-userpt/ts-node-api"
         },
         {
             "label": "gcloud:deploy",
             "type": "shell",
-            "command": "gcloud run deploy ts-node-api --image gcr.io/dworks-diegoa/ts-node-api --platform managed --region europe-west4 --allow-unauthenticated --service-account ts-node-api@dworks-diegoa.iam.gserviceaccount.com --update-secrets SENTRY_ORG=SENTRY_ORG:latest,SENTRY_PROJECT=SENTRY_PROJECT:latest,SENTRY_AUTH_TOKEN=SENTRY_AUTH_TOKEN:latest,SENTRY_DSN=SENTRY_DSN:latest,JWT_SECRET=JWT_SECRET:latest"
+            "command": "gcloud run deploy ts-node-api --image gcr.io/dworks-userpt/ts-node-api --platform managed --region europe-west4 --allow-unauthenticated --service-account ts-node-api@dworks-userpt.iam.gserviceaccount.com --update-secrets SENTRY_ORG=SENTRY_ORG:latest,SENTRY_PROJECT=SENTRY_PROJECT:latest,SENTRY_AUTH_TOKEN=SENTRY_AUTH_TOKEN:latest,SENTRY_DSN=SENTRY_DSN:latest,JWT_SECRET=JWT_SECRET:latest"
         },
         {
             "label": "docker:build",

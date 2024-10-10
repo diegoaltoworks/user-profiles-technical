@@ -1,0 +1,20 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  ci-test:
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+
+  ci-build:
+    needs: ci-test
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  ci-deploy:
+    needs: ci-build
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

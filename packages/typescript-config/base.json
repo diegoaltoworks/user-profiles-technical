@@ -2,9 +2,11 @@
     "$schema": "https://json.schemastore.org/tsconfig",
     "display": "Default",
     "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
         "composite": true,
         "declaration": true,
         "declarationMap": true,
+        "esModuleInterop": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "inlineSources": false,
@@ -15,6 +17,7 @@
         "noUnusedParameters": false,
         "preserveWatchOutput": true,
         "skipLibCheck": true,
-        "strict": true
+        "strict": true,
+        "strictNullChecks": true
     }
 }

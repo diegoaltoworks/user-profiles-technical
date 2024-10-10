@@ -1,0 +1,106 @@
+name: build
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+  PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+  PROJECT_VERSION: ${{ secrets.PROJECT_VERSION }}
+  NEXT_PUBLIC_API_HOST: ${{ secrets.NEXT_PUBLIC_API_HOST }}
+  NEXT_PUBLIC_WEB_HOST: ${{ secrets.NEXT_PUBLIC_WEB_HOST }}
+  NEXT_PUBLIC_GITHUB_USERNAME: ${{ secrets.NEXT_PUBLIC_GITHUB_USERNAME }}
+  TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+  TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check required environment variables
+      run: |
+        required_vars=()
+        for var in GCP_PROJECT_ID GCP_SA_KEY PROJECT_NAME PROJECT_VERSION NEXT_PUBLIC_API_HOST NEXT_PUBLIC_WEB_HOST NEXT_PUBLIC_GITHUB_USERNAME TURSO_DATABASE_URL TURSO_AUTH_TOKEN; do
+          if [ -z "${!var}" ]; then
+            required_vars+=($var)
+          fi
+        done
+        if [ ${#required_vars[@]} -ne 0 ]; then
+          echo "Error: The following required environment variables are not set: ${required_vars[*]}"
+          exit 1
+        fi
+      shell: bash
+
+    - name: Set up Cloud Auth
+      id: 'auth'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: ${{ env.GCP_PROJECT_ID }}
+        credentials_json: ${{ env.GCP_SA_KEY }}
+        export_environment_variables: true
+        create_credentials_file: true
+        # see https://github.com/google-github-actions/auth
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        version: '>= 363.0.0'
+
+    - name: 'Use gcloud CLI'
+      run: |
+        gcloud auth list --filter=status:ACTIVE --format="value(account)"'
+
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      if: ${{ !env.ACT }}
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        fetch-depth: 1
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+
+    - name: Install packages
+      run: |
+        npm ci
+
+    - name: Build All Apps
+      run: |
+        npm run build
+
+    - name: Build API Docker Image
+      run: |
+        docker build \
+          --build-arg PROJECT_NAME="${{ env.PROJECT_NAME }}" \
+          --build-arg PROJECT_VERSION="${{ env.PROJECT_VERSION }}" \
+          --build-arg TURSO_DATABASE_URL="${{ env.TURSO_DATABASE_URL }}" \
+          --build-arg TURSO_AUTH_TOKEN="${{ env.TURSO_AUTH_TOKEN }}" \
+          -t gcr.io/${{ env.GCP_PROJECT_ID }}/api:${{ github.sha }} \
+          -f ./apps/api/Dockerfile .
+
+    - name: Build WEB Docker Image
+      run: |
+        docker build \
+          --build-arg PROJECT_NAME="${{ env.PROJECT_NAME }}" \
+          --build-arg PROJECT_VERSION="${{ env.PROJECT_VERSION }}" \
+          --build-arg NEXT_PUBLIC_API_HOST="${{ env.NEXT_PUBLIC_API_HOST }}" \
+          --build-arg NEXT_PUBLIC_WEB_HOST="${{ env.NEXT_PUBLIC_WEB_HOST }}" \
+          --build-arg NEXT_PUBLIC_GITHUB_USERNAME="${{ env.NEXT_PUBLIC_GITHUB_USERNAME }}" \
+          -t gcr.io/${{ env.GCP_PROJECT_ID }}/web:${{ github.sha }} \
+          -f ./apps/web/Dockerfile .
+
+    - name: Config Docker
+      run: |
+        gcloud auth configure-docker
+
+    - name: Push API image to artifcact registry
+      run: |
+        docker push gcr.io/${{ env.GCP_PROJECT_ID }}/api:${{ github.sha }}
+
+    - name: Push WEB image to artifcact registry
+      run: |
+        docker push gcr.io/${{ env.GCP_PROJECT_ID }}/web:${{ github.sha }}

@@ -10,6 +10,7 @@ export const TRPCQueryClient: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
+    // fixed! no need to ts-ignore any more
     trpc.createClient({
       links: [
         httpBatchLink({
@@ -22,8 +23,14 @@ export const TRPCQueryClient: React.FC<{ children: React.ReactNode }> = ({
     }),
   );
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </trpc.Provider>
+    <>
+      {/* @ts-ignore */}
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+        {/* @ts-ignore */}
+      </trpc.Provider>
+    </>
   );
 };

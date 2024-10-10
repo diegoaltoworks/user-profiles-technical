@@ -8,6 +8,7 @@ import { useParsedQueryParams } from "~/hooks/useParsedQueryParams";
 export const useUser = () => {
   const query = useParsedQueryParams<{ id: string }>();
   const [user, setUser] = useState<ExistingUserProps | null>(null);
+  // fixed! no need to ts-ignore any more
   const { data: result } = trpc.user.retrieve.useQuery({ id: query.id });
 
   useEffect(() => {

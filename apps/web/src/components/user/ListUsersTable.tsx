@@ -8,6 +8,7 @@ import Link from "next/link";
 
 export default function ListUsersTable() {
   const search = useParsedQueryParams<SearchInput>(searchInput);
+  // fixed! no need to ts-ignore any more
   const { data, isLoading, error } = trpc.user.search.useQuery(
     {
       keyword: search.keyword,

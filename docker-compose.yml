@@ -1,27 +1,41 @@
+version: '3'
+
 services:
   web:
     container_name: web
+    env_file: .env
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile
+      args:
+        - PROJECT_NAME=${PROJECT_NAME}
+        - PROJECT_VERSION=${PROJECT_VERSION}
+        - NEXT_PUBLIC_API_HOST=${NEXT_PUBLIC_API_HOST}
+        - NEXT_PUBLIC_WEB_HOST=${NEXT_PUBLIC_WEB_HOST}
+        - NEXT_PUBLIC_GITHUB_USERNAME=${NEXT_PUBLIC_GITHUB_USERNAME}
     restart: always
     ports:
       - 3000:3000
     networks:
       - app_network
+
   api:
     container_name: api
+    env_file: .env
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
+      args:
+        - PROJECT_NAME=${PROJECT_NAME}
+        - PROJECT_VERSION=${PROJECT_VERSION}
+        - TURSO_DATABASE_URL=${TURSO_DATABASE_URL}
+        - TURSO_AUTH_TOKEN=${TURSO_AUTH_TOKEN}
     restart: always
     ports:
       - 3001:3001
     networks:
       - app_network
 
-# Define a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
 networks:
   app_network:
     external: true

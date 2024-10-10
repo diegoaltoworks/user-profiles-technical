@@ -9,6 +9,7 @@ import { trpc } from "~/utils/trpc";
 import { useRouter } from "next/navigation";
 
 export default function AddUserForm() {
+  // fixed! no need to ts-ignore any more
   const utils = trpc.useUtils();
   const router = useRouter();
   const {
@@ -24,6 +25,7 @@ export default function AddUserForm() {
     mutate,
     isLoading,
     data: response,
+    // fixed! no need to ts-ignore any more
   } = trpc.user.create.useMutation({
     onSuccess() {
       utils.user.retrieve.invalidate();

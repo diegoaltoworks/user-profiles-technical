@@ -11,7 +11,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN npm i -g turbo
 COPY . .
-RUN npx turbo prune web --docker
+RUN npx turbo prune @repo/web --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -26,6 +26,27 @@ RUN npm install
 # Build the project
 COPY --from=builder /app/out/full/ .
 
+# Set build arguments
+ARG PROJECT_NAME
+ARG PROJECT_VERSION
+ARG NEXT_PUBLIC_API_HOST
+ARG NEXT_PUBLIC_WEB_HOST
+ARG NEXT_PUBLIC_GITHUB_USERNAME
+
+# Check for required build arguments
+RUN test -n "$PROJECT_NAME" || (echo "PROJECT_NAME build arg is required" && false)
+RUN test -n "$PROJECT_VERSION" || (echo "PROJECT_VERSION build arg is required" && false)
+RUN test -n "$NEXT_PUBLIC_API_HOST" || (echo "NEXT_PUBLIC_API_HOST build arg is required" && false)
+RUN test -n "$NEXT_PUBLIC_WEB_HOST" || (echo "NEXT_PUBLIC_WEB_HOST build arg is required" && false)
+RUN test -n "$NEXT_PUBLIC_GITHUB_USERNAME" || (echo "NEXT_PUBLIC_GITHUB_USERNAME build arg is required" && false)
+
+# Set environment variables
+ENV PROJECT_NAME=$PROJECT_NAME
+ENV PROJECT_VERSION=$PROJECT_VERSION
+ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
+ENV NEXT_PUBLIC_WEB_HOST=$NEXT_PUBLIC_WEB_HOST
+ENV NEXT_PUBLIC_GITHUB_USERNAME=$NEXT_PUBLIC_GITHUB_USERNAME
+
 # Uncomment and use build args to enable remote caching
 # ARG TURBO_TEAM
 # ENV TURBO_TEAM=$TURBO_TEAM
@@ -33,7 +54,7 @@ COPY --from=builder /app/out/full/ .
 # ARG TURBO_TOKEN
 # ENV TURBO_TOKEN=$TURBO_TOKEN
 
-RUN npx turbo build --filter=web...
+RUN npx turbo build --filter=@repo/web...
 
 FROM base AS runner
 WORKDIR /app
@@ -48,5 +69,12 @@ USER nextjs
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+
+# Set runtime environment variables
+ENV PROJECT_NAME=$PROJECT_NAME
+ENV PROJECT_VERSION=$PROJECT_VERSION
+ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
+ENV NEXT_PUBLIC_WEB_HOST=$NEXT_PUBLIC_WEB_HOST
+ENV NEXT_PUBLIC_GITHUB_USERNAME=$NEXT_PUBLIC_GITHUB_USERNAME
 
 CMD node apps/web/server.js

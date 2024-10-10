@@ -1,13 +1,9 @@
 {
     "extends": "@repo/typescript-config/base.json",
     "compilerOptions": {
-        "strict": true,
-        "strictNullChecks": true,
         "module": "CommonJS",
         "moduleResolution": "Node",
         "target": "ES2022",
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
         "lib": ["ES2023"],
         "outDir": "./dist",
         "rootDir": "./src"

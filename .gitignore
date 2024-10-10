@@ -37,3 +37,12 @@ yarn-error.log*
 
 # ignore tsbuildinfo files
 *.tsbuildinfo
+
+# ignore terraform files
+terraform/.terraform
+terraform/*.tfstate
+terraform/*.tfstate.*
+
+# secrets
+.env*
+.secrets*

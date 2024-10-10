@@ -1,5 +1,5 @@
 {
-    "name": "web",
+    "name": "@repo/web",
     "version": "0.0.0",
     "private": true,
     "scripts": {
@@ -12,6 +12,7 @@
         "@hookform/resolvers": "^3.9.0",
         "@repo/schema": "*",
         "@repo/ui": "*",
+        "@repo/api": "*",
         "@tanstack/react-query": "^4.36.1",
         "@trpc/client": "^10.45.2",
         "@trpc/react-query": "^10.45.2",

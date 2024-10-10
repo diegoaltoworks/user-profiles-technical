@@ -1,0 +1,50 @@
+name: test
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+  PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+  PROJECT_VERSION: ${{ secrets.PROJECT_VERSION }}
+  NEXT_PUBLIC_API_HOST: ${{ secrets.NEXT_PUBLIC_API_HOST }}
+  NEXT_PUBLIC_WEB_HOST: ${{ secrets.NEXT_PUBLIC_WEB_HOST }}
+  NEXT_PUBLIC_GITHUB_USERNAME: ${{ secrets.NEXT_PUBLIC_GITHUB_USERNAME }}
+  TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+  TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check required environment variables have been set
+        run: |
+          required_vars=()
+          for var in GCP_PROJECT_ID GCP_SA_KEY PROJECT_NAME PROJECT_VERSION NEXT_PUBLIC_API_HOST NEXT_PUBLIC_WEB_HOST NEXT_PUBLIC_GITHUB_USERNAME TURSO_DATABASE_URL TURSO_AUTH_TOKEN; do
+            if [ -z "${!var}" ]; then
+              required_vars+=($var)
+            fi
+          done
+          if [ ${#required_vars[@]} -ne 0 ]; then
+            echo "Error: The following required environment variables are not set: ${required_vars[*]}"
+            exit 1
+          fi
+        shell: bash
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        if: ${{ !env.ACT }}
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Run tests
+        run: |
+          npm ci
+          npm test

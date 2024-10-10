@@ -1,6 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import DeleteUserForm from "~/components/user/DeleteUserForm";
 
 export default function Page(): React.ReactNode {
-  return <DeleteUserForm />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DeleteUserForm />
+    </Suspense>
+  );
 }

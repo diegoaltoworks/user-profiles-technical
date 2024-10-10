@@ -8,10 +8,12 @@ import { useUser } from "~/hooks/useUser";
 
 export default function EditUserForm() {
   const user = useUser();
+  // fixed! no need to ts-ignore any more
   const utils = trpc.useUtils();
   const router = useRouter();
   const [error, setError] = useState<string | undefined>();
-  const { mutate, data: response } = trpc.user.delete.useMutation({
+  // fixed! no need to ts-ignore any more
+  const { mutate } = trpc.user.delete.useMutation({
     onSuccess() {
       utils.user.retrieve.invalidate();
       utils.user.search.invalidate();
