@@ -57,6 +57,7 @@ jobs:
         --region europe-west4 \
         --set-secrets "PROJECT_NAME=PROJECT_NAME:latest" \
         --set-secrets "PROJECT_VERSION=PROJECT_VERSION:latest" \
+        --set-secrets "NEXT_PUBLIC_API_HOST=NEXT_PUBLIC_API_HOST:latest" \
         --set-secrets "TURSO_DATABASE_URL=TURSO_DATABASE_URL:latest" \
         --set-secrets "TURSO_AUTH_TOKEN=TURSO_AUTH_TOKEN:latest" \
         --allow-unauthenticated

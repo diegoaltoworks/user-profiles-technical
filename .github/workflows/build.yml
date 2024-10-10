@@ -68,7 +68,8 @@ jobs:
       run: |
         docker build \
           --build-arg PROJECT_NAME="${{ env.PROJECT_NAME }}" \
-          --build-arg PROJECT_VERSION="${{ env.PROJECT_VERSION }}" \
+          --build-arg PROJECT_VERSION="${{ env.PROJECT_VERSION }}"
+          --build-arg NEXT_PUBLIC_API_HOST="${{ env.NEXT_PUBLIC_API_HOST }}" \
           --build-arg TURSO_DATABASE_URL="${{ env.TURSO_DATABASE_URL }}" \
           --build-arg TURSO_AUTH_TOKEN="${{ env.TURSO_AUTH_TOKEN }}" \
           -t gcr.io/${{ env.GCP_PROJECT_ID }}/api:${{ github.sha }} \
