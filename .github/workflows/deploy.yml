@@ -29,10 +29,10 @@ jobs:
       run: |
         gcloud auth list --filter=status:ACTIVE --format="value(account)"
 
-    - name: Deploy API image to Cloud Run
+    - name: Deploy latest API image to Cloud Run
       run: |
         gcloud run deploy user-profiles-technical-api \
-        --image gcr.io/${{ env.GCP_PROJECT_ID }}/api:${{ github.sha }} \
+        --image gcr.io/${{ env.GCP_PROJECT_ID }}/api:latest \
         --platform managed \
         --region europe-west4 \
         --set-secrets "PROJECT_NAME=PROJECT_NAME:latest" \
@@ -42,10 +42,10 @@ jobs:
         --set-secrets "TURSO_AUTH_TOKEN=TURSO_AUTH_TOKEN:latest" \
         --allow-unauthenticated
 
-    - name: Deploy WEB image to Cloud Run
+    - name: Deploy latest WEB image to Cloud Run
       run: |
         gcloud run deploy user-profiles-technical-web \
-        --image gcr.io/${{ env.GCP_PROJECT_ID }}/web:${{ github.sha }} \
+        --image gcr.io/${{ env.GCP_PROJECT_ID }}/web:latest \
         --platform managed \
         --region europe-west4 \
         --set-secrets "PROJECT_NAME=PROJECT_NAME:latest" \
