@@ -85,7 +85,9 @@ jobs:
     - name: Push API image to artifcact registry
       run: |
         docker push gcr.io/${{ env.GCP_PROJECT_ID }}/api:${{ github.sha }}
+        docker push gcr.io/${{ env.GCP_PROJECT_ID }}/api:latest
 
     - name: Push WEB image to artifcact registry
       run: |
         docker push gcr.io/${{ env.GCP_PROJECT_ID }}/web:${{ github.sha }}
+        docker push gcr.io/${{ env.GCP_PROJECT_ID }}/web:latest
