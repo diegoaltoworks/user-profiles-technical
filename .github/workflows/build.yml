@@ -78,6 +78,11 @@ jobs:
           -t gcr.io/${{ env.GCP_PROJECT_ID }}/web:${{ github.sha }} \
           -f ./apps/web/Dockerfile .
 
+    - name: Tag the images as latest
+      run: |
+        docker tag gcr.io/${{ env.GCP_PROJECT_ID }}/web:${{ github.sha }} gcr.io/${{ env.GCP_PROJECT_ID }}/web:latest
+        docker tag gcr.io/${{ env.GCP_PROJECT_ID }}/api:${{ github.sha }} gcr.io/${{ env.GCP_PROJECT_ID }}/api:latest
+
     - name: Config Docker
       run: |
         gcloud auth configure-docker
