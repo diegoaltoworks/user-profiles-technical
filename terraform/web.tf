@@ -6,7 +6,7 @@ resource "google_cloud_run_service" "web" {
   template {
     spec {
       containers {
-        image = "gcr.io/${var.project_id}/web:${var.web_image_tag}"
+        image = "gcr.io/${var.project_id}/web:latest"
         env {
           name  = "PROJECT_NAME"
           value = local.project_name
